@@ -126,12 +126,14 @@
   }
 
   async function verifyGumroadLicense(rawKey) {
+    const productId = String(CFG.productId || CFG.product_id || "").trim();
     const permalink = String(CFG.productPermalink || CFG.product_permalink || "").trim();
-    if (!permalink) {
+    if (!productId && !permalink) {
       return { ok: false, message: "Product not configured for license verify." };
     }
     const body = new URLSearchParams();
-    body.set("product_permalink", permalink);
+    if (productId) body.set("product_id", productId);
+    else body.set("product_permalink", permalink);
     body.set("license_key", String(rawKey || "").trim());
     const res = await fetch("https://api.gumroad.com/v2/licenses/verify", {
       method: "POST",

@@ -326,6 +326,9 @@ input:focus {
   color: var(--muted);
   font-size: .85rem;
 }
+.more-tools { flex-basis: 100%; text-align: center; margin: .15rem 0 0; font-size: .8rem; color: var(--muted); }
+.more-tools a { color: var(--muted); text-decoration: underline; text-underline-offset: 2px; }
+.more-tools a:hover { color: var(--text); }
 
 .modal[hidden] { display: none !important; }
 .modal {

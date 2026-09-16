@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="DocBurn — permanently black out secrets in PDFs. Burn solid redactions into page pixels so text can't be copied or layers peeled. Offline, client-side. $2.99 lifetime unlock." />
+  <title>DocBurn — Permanent PDF Redaction</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="bg-blobs" aria-hidden="true"></div>
+
+  <div class="ad-region ad-sticky-top" data-ad="top" data-ad-slot="top" aria-label="Sponsored">
+    <span class="ad-label">Ad</span>
+    <div class="ad-inner" data-ad-creative>
+      <strong>Sponsored</strong> — Burn redactions without ads. Unlock DocBurn lifetime for $2.99 → no watermark, multi-page export.
+    </div>
+  </div>
+
+  <header class="topbar">
+    <div class="brand">
+      <img src="favicon.svg" alt="" class="brand-icon" width="32" height="32" />
+      <div>
+        <strong>DocBurn</strong>
+        <span class="tagline">Permanent PDF redaction — burn, don’t blur</span>
+      </div>
+    </div>
+    <div class="top-actions">
+      <span id="unlockBadge" class="badge free">Free</span>
+      <button type="button" class="btn ghost" id="unlockBtn">Unlock $2.99</button>
+    </div>
+  </header>
+
+  <div class="ad-wrap-mid">
+    <div class="ad-region ad-mid" data-ad="mid" data-ad-slot="mid" aria-label="Sponsored">
+      <span class="ad-label">Ad</span>
+      <div class="ad-inner" data-ad-creative>
+        <strong>FakeSponsor Docs</strong> — “Redact” in the cloud and hope overlays stick. Or stay private with DocBurn Unlock ($2.99).
+      </div>
+    </div>
+  </div>
+
+  <main class="layout">
+    <section class="panel drop-panel" id="dropZone" tabindex="0" aria-label="Drop PDF here">
+      <input type="file" id="fileInput" accept="application/pdf,.pdf" hidden />
+      <div class="drop-inner" id="dropEmpty">
+        <div class="drop-icon" aria-hidden="true">📄⬛</div>
+        <h1>Drop a PDF</h1>
+        <p>Redactions burn into page pixels in your browser. Nothing uploads. Text can’t be copied underneath.</p>
+        <button type="button" class="btn primary" id="pickBtn">Choose PDF</button>
+      </div>
+      <div class="viewer" id="viewer" hidden>
+        <div class="page-nav">
+          <button type="button" class="btn ghost sm" id="prevPage" disabled>← Prev</button>
+          <span id="pageLabel">Page 1 / 1</span>
+          <button type="button" class="btn ghost sm" id="nextPage" disabled>Next →</button>
+        </div>
+        <div class="canvas-wrap" id="canvasWrap">
+          <canvas id="pageCanvas" aria-label="PDF page redaction canvas"></canvas>
+          <canvas id="drawCanvas" aria-label="Draw redaction rectangles"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel controls-panel">
+      <h2>Redact</h2>
+      <p class="mode-hint">Draw solid black rectangles over secrets. Export burns them into pixels — not removable annotation layers.</p>
+
+      <div class="free-note" id="freeNote">
+        <strong>Free tier:</strong> page 1 only · “DocBurn” watermark on export.
+        <button type="button" class="linkish" id="unlockLink">Unlock $2.99</button>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="btn ghost" id="undoBtn" disabled>Undo</button>
+        <button type="button" class="btn ghost" id="clearBtn" disabled>Clear page</button>
+      </div>
+
+      <div class="meta-box" id="docMeta">
+        <p class="preview-meta">No PDF loaded</p>
+      </div>
+
+      <div class="ad-region ad-download" data-ad="export" data-ad-slot="export" aria-label="Sponsored">
+        <span class="ad-label">Ad</span>
+        <div class="ad-inner" data-ad-creative>
+          <strong>Export clean — Unlock DocBurn $2.99</strong><br />No watermark. All pages. One license key after checkout.
+        </div>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="btn primary wide" id="exportBtn" disabled>Export redacted PDF</button>
+        <button type="button" class="btn ghost" id="resetBtn" disabled>New PDF</button>
+      </div>
+      <p class="privacy" id="statusLine">Processed on-device. Pages become images with black burned in — no peelable text layer.</p>
+    </section>
+
+    <section class="panel info-panel">
+      <h2>How it works</h2>
+      <ol class="how-list">
+        <li>Drop or pick a PDF</li>
+        <li>Draw black rectangles over SSNs, emails, account numbers</li>
+        <li>Export rebuilds the PDF as <strong>burned page images</strong></li>
+        <li>Text under black boxes cannot be selected or copied</li>
+      </ol>
+      <p class="warn-box">⚠ Annotation-only “redact” tools leave text underneath. DocBurn rasterizes + burns so secrets stay gone.</p>
+      <h3>Pages with redactions</h3>
+      <ul class="page-list" id="pageList"></ul>
+    </section>
+  </main>
+
+  <div class="ad-wrap-footer">
+    <div class="ad-region ad-footer" data-ad="footer" data-ad-slot="footer" aria-label="Sponsored">
+      <span class="ad-label">Ad</span>
+      <div class="ad-inner" data-ad-creative>
+        <strong>Sponsored · DocBurn Unlock</strong> — Kill ads + watermark with one $2.99 license key from the store.
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <span>DocBurn · permanent PDF redaction</span>
+    <button type="button" class="linkish" id="footerUnlock">Unlock $2.99</button>
+    <span>No upload · client-side only</span>
+  </footer>
+
+  <div class="modal" id="unlockModal" hidden role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-card">
+      <button type="button" class="modal-close" id="modalClose" aria-label="Close">&times;</button>
+      <h2 id="modalTitle">Unlock DocBurn — $2.99</h2>
+      <p class="modal-lead">Lifetime unlock. No watermark. Multi-page export. Ads gone.</p>
+      <ul class="perk-list">
+        <li>Solid black burn-in redaction</li>
+        <li>All pages (not just page 1)</li>
+        <li>No “DocBurn” watermark</li>
+        <li>Ads hidden forever on this device</li>
+      </ul>
+      <div class="modal-actions">
+        <a class="btn primary wide" id="buyBtn" href="#" target="_blank" rel="noopener">Buy $2.99 — get license key</a>
+      </div>
+      <p class="hint" id="checkoutHint" hidden></p>
+      <label class="field">
+        <span>License key</span>
+        <input type="text" id="licenseKey" placeholder="IB-DOC-XXXX-XXXX (from Gumroad receipt)" autocomplete="off" spellcheck="false" />
+      </label>
+      <div class="modal-actions">
+        <button type="button" class="btn primary wide" id="applyKeyBtn">Apply key</button>
+      </div>
+      <p class="hint" id="unlockError" hidden></p>
+      <button type="button" class="btn ghost wide" id="demoUnlockBtn" hidden>Demo unlock (?demo=1)</button>
+      <p class="tiny">Unlock requires a valid license key from checkout. There is no “I paid” honor button.</p>
+    </div>
+  </div>
+
+  <div class="modal" id="nagModal" hidden role="dialog" aria-modal="true" aria-labelledby="nagTitle">
+    <div class="modal-card">
+      <button type="button" class="modal-close" id="nagClose" aria-label="Close">&times;</button>
+      <h2 id="nagTitle">Unlock for multi-page</h2>
+      <p class="modal-lead">Free tier exports page 1 only (with watermark). Unlock DocBurn for $2.99 to burn all pages clean.</p>
+      <div class="modal-actions">
+        <button type="button" class="btn primary wide" id="nagUnlockBtn">Unlock $2.99</button>
+        <button type="button" class="btn ghost wide" id="nagDismiss">Export page 1 anyway</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- pdf.js + pdf-lib from CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

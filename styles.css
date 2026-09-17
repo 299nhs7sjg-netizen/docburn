@@ -399,6 +399,18 @@ input:focus {
   display: block; min-height: 60px; background: transparent;
 }
 
-.more-tools { flex-basis: 100%; text-align: center; margin: .15rem 0 0; font-size: .8rem; color: var(--muted); }
-.more-tools a { color: var(--muted); text-decoration: underline; text-underline-offset: 2px; }
-.more-tools a:hover { color: var(--text); }
+.cross-promo {
+  flex-basis: 100%;
+  text-align: center;
+  margin: .35rem 0 0;
+  padding: .65rem .75rem .15rem;
+  border-top: 1px solid color-mix(in srgb, var(--muted) 35%, transparent);
+  font-size: .8rem;
+  color: var(--muted);
+}
+.cross-promo-intro { margin: 0 0 .35rem; }
+.cross-promo-hub { margin: 0 0 .35rem; }
+.cross-promo-hub a, .cross-promo-list a { color: var(--muted); text-decoration: underline; text-underline-offset: 2px; }
+.cross-promo-hub a:hover, .cross-promo-list a:hover { color: var(--text); }
+.cross-promo-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .2rem; }
+.cross-promo-list .cross-buy { font-weight: 600; color: var(--accent, var(--text)); }

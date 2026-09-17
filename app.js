@@ -65,7 +65,12 @@
     freeNote: $("freeNote"),
     unlockBtn: $("unlockBtn"),
     unlockLink: $("unlockLink"),
+    unlockNearExport: $("unlockNearExport"),
+    unlockInline: $("unlockInline"),
+    stickyUnlock: $("stickyUnlock"),
+    stickyUnlockBtn: $("stickyUnlockBtn"),
     footerUnlock: $("footerUnlock"),
+    footerBuy: $("footerBuy"),
     unlockBadge: $("unlockBadge"),
     undoBtn: $("undoBtn"),
     clearBtn: $("clearBtn"),
@@ -204,32 +209,42 @@
   function updateCheckoutLink() {
     const url = (CFG.checkoutUrl || "").trim();
     const hint = els.checkoutHint;
-    if (url) {
+    const links = document.querySelectorAll("[data-checkout]");
+    links.forEach(function (el) {
+      if (url) {
+        el.href = url;
+        el.setAttribute("target", "_blank");
+        el.setAttribute("rel", "noopener");
+        el.removeAttribute("aria-disabled");
+        el.onclick = null;
+      } else {
+        el.href = "#";
+        el.setAttribute("aria-disabled", "true");
+        el.onclick = function (e) {
+          e.preventDefault();
+          if (els.unlockError) {
+            els.unlockError.textContent =
+              "Checkout URL not set. Operator: paste Gumroad URL into config.js → checkoutUrl, then redeploy.";
+            els.unlockError.hidden = false;
+          }
+        };
+      }
+    });
+    if (els.buyBtn && url) {
       els.buyBtn.href = url;
-      els.buyBtn.removeAttribute("aria-disabled");
-      if (hint) {
+      els.buyBtn.setAttribute("target", "_blank");
+      els.buyBtn.setAttribute("rel", "noopener");
+    }
+    if (hint) {
+      if (url) {
         hint.hidden = false;
         hint.style.color = "var(--muted)";
         hint.textContent =
           "After checkout, your store email includes a license key. Paste it below.";
-      }
-    } else {
-      els.buyBtn.href = "#";
-      els.buyBtn.onclick = function (e) {
-        if (!(CFG.checkoutUrl || "").trim()) {
-          e.preventDefault();
-          if (els.unlockError) {
-            els.unlockError.textContent =
-              "Checkout URL not set. CoS: create Gumroad product DocBurn Lifetime ($2.99), then paste URL into config.js → checkoutUrl.";
-            els.unlockError.hidden = false;
-          }
-        }
-      };
-      if (hint) {
+      } else {
         hint.hidden = false;
         hint.style.color = "var(--danger)";
-        hint.textContent =
-          "Checkout URL not set — CoS: create Gumroad product (docburn-lifetime, $2.99) and paste the URL into config.js → checkoutUrl, then redeploy.";
+        hint.textContent = 'Checkout URL not set — CoS: create Gumroad product (docburn-lifetime, $2.99) and paste the URL into config.js → checkoutUrl, then redeploy.';
       }
     }
   }
@@ -242,6 +257,11 @@
       els.unlockBtn.textContent = "Unlocked ✓";
       els.unlockBtn.disabled = true;
       els.freeNote.hidden = true;
+      if (els.unlockInline) els.unlockInline.hidden = true;
+      if (els.stickyUnlock) els.stickyUnlock.hidden = true;
+      document.body.classList.remove("has-sticky-unlock");
+      if (els.footerUnlock) els.footerUnlock.hidden = true;
+      if (els.footerBuy) els.footerBuy.hidden = true;
       hideAds();
     } else {
       els.unlockBadge.textContent = "Free";
@@ -249,6 +269,11 @@
       els.unlockBtn.textContent = "Unlock $2.99";
       els.unlockBtn.disabled = false;
       els.freeNote.hidden = false;
+      if (els.unlockInline) els.unlockInline.hidden = false;
+      if (els.stickyUnlock) els.stickyUnlock.hidden = false;
+      document.body.classList.add("has-sticky-unlock");
+      if (els.footerUnlock) els.footerUnlock.hidden = false;
+      if (els.footerBuy) els.footerBuy.hidden = false;
       showAds();
       fillAdPlaceholders();
     }
@@ -752,8 +777,10 @@
   });
 
   els.unlockBtn.addEventListener("click", openModal);
-  els.unlockLink.addEventListener("click", openModal);
-  els.footerUnlock.addEventListener("click", openModal);
+  if (els.unlockLink) els.unlockLink.addEventListener("click", openModal);
+  if (els.unlockNearExport) els.unlockNearExport.addEventListener("click", openModal);
+  if (els.stickyUnlockBtn) els.stickyUnlockBtn.addEventListener("click", openModal);
+  if (els.footerUnlock) els.footerUnlock.addEventListener("click", openModal);
   els.modalClose.addEventListener("click", closeModal);
   els.unlockModal.addEventListener("click", function (e) {
     if (e.target === els.unlockModal) closeModal();

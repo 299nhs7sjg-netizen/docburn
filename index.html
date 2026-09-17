@@ -28,7 +28,7 @@
     </div>
     <div class="top-actions">
       <span id="unlockBadge" class="badge free">Free</span>
-      <button type="button" class="btn ghost" id="unlockBtn">Unlock $2.99</button>
+      <button type="button" class="btn primary unlock-cta" id="unlockBtn">Unlock $2.99</button>
     </div>
   </header>
 
@@ -69,7 +69,9 @@
 
       <div class="free-note" id="freeNote">
         <strong>Free tier:</strong> page 1 only · “DocBurn” watermark on export.
-        <button type="button" class="linkish" id="unlockLink">Unlock $2.99</button>
+        <div class="free-note-cta">
+          <button type="button" class="btn primary unlock-cta" id="unlockLink">Unlock $2.99 — lifetime</button>
+        </div>
       </div>
 
       <div class="actions">
@@ -88,6 +90,9 @@
         </div>
       </div>
 
+      <div class="actions unlock-inline" id="unlockInline">
+        <button type="button" class="btn primary wide unlock-cta" id="unlockNearExport">Unlock $2.99 — get license key</button>
+      </div>
       <div class="actions">
         <button type="button" class="btn primary wide" id="exportBtn" disabled>Export redacted PDF</button>
         <button type="button" class="btn ghost" id="resetBtn" disabled>New PDF</button>
@@ -120,10 +125,11 @@
 
   <footer class="footer">
     <span>DocBurn · permanent PDF redaction</span>
-    <button type="button" class="linkish" id="footerUnlock">Unlock $2.99</button>
+    <button type="button" class="btn primary unlock-cta footer-unlock-btn" id="footerUnlock">Unlock $2.99</button>
+    <a class="btn primary unlock-cta footer-buy-btn" id="footerBuy" data-checkout href="https://greenlight5868.gumroad.com/l/docburn-lifetime" target="_blank" rel="noopener">Buy $2.99 — lifetime</a>
     <span>No upload · client-side only</span>
     <aside class="cross-promo" aria-label="GreenTools">
-      <p class="cross-promo-intro">Four private, in-browser tools — $2.99 lifetime unlock each:</p>
+      <p class="cross-promo-intro">Private in-browser tools — $2.99 lifetime each:</p>
       <p class="cross-promo-hub"><a href="https://299nhs7sjg-netizen.github.io/greentools/">GreenTools hub</a></p>
       <ul class="cross-promo-list">
         <li><a href="https://299nhs7sjg-netizen.github.io/blotout/">BlotOut</a> — permanent screenshot blackout · <a class="cross-buy" href="https://greenlight5868.gumroad.com/l/blotout-lifetime" target="_blank" rel="noopener">Buy</a></li>
@@ -144,15 +150,16 @@
         <li>Ads hidden forever on this device</li>
       </ul>
       <div class="modal-actions">
-        <a class="btn primary wide" id="buyBtn" href="#" target="_blank" rel="noopener">Buy $2.99 — get license key</a>
+        <a class="btn primary wide unlock-cta" id="buyBtn" data-checkout href="https://greenlight5868.gumroad.com/l/docburn-lifetime" target="_blank" rel="noopener">Buy $2.99 — lifetime</a>
       </div>
+      <p class="soft-path">Keep using free anytime. After checkout, paste your license key below.</p>
       <p class="hint" id="checkoutHint" hidden></p>
       <label class="field">
         <span>License key</span>
         <input type="text" id="licenseKey" placeholder="IB-DOC-XXXX-XXXX (from Gumroad receipt)" autocomplete="off" spellcheck="false" />
       </label>
       <div class="modal-actions">
-        <button type="button" class="btn primary wide" id="applyKeyBtn">Apply key</button>
+        <button type="button" class="btn primary wide unlock-cta" id="applyKeyBtn">Apply key</button>
       </div>
       <p class="hint" id="unlockError" hidden></p>
       <button type="button" class="btn ghost wide" id="demoUnlockBtn" hidden>Demo unlock (?demo=1)</button>
@@ -175,6 +182,11 @@
   <!-- pdf.js + pdf-lib from CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+  <div class="sticky-unlock" id="stickyUnlock" hidden>
+    <span class="sticky-unlock-copy">$2.99 lifetime · no watermark</span>
+    <button type="button" class="btn primary unlock-cta" id="stickyUnlockBtn">Unlock $2.99</button>
+  </div>
+
   <script src="config.js"></script>
   <script src="app.js"></script>
 </body>
